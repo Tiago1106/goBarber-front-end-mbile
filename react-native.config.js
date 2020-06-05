@@ -1,4 +1,4 @@
-modeule.export = {
+module.exports = {
   projecs: {
     ios: {},
     android: {},
