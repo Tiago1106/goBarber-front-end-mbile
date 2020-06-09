@@ -37,42 +37,45 @@ const SingUp: React.FC = () => {
   const emailInputRef = useRef<TextInput>(null);
   const passwordInputRef = useRef<TextInput>(null);
 
-  const handleSignUp = useCallback(async (data: SignUpFormData) => {
-    try {
-      formRef.current?.setErrors({});
+  const handleSignUp = useCallback(
+    async (data: SignUpFormData) => {
+      try {
+        formRef.current?.setErrors({});
 
-      const schema = Yup.object().shape({
-        name: Yup.string().required('Nome obrigatório'),
-        email: Yup.string()
-          .required('E-mail obrigatório')
-          .email('Digite um e-mail valido'),
-        password: Yup.string().min(6, 'No minimo 6 digitos'),
-      });
+        const schema = Yup.object().shape({
+          name: Yup.string().required('Nome obrigatório'),
+          email: Yup.string()
+            .required('E-mail obrigatório')
+            .email('Digite um e-mail valido'),
+          password: Yup.string().min(6, 'No minimo 6 digitos'),
+        });
 
-      await schema.validate(data, {
-        abortEarly: false,
-      });
+        await schema.validate(data, {
+          abortEarly: false,
+        });
 
-      await api.post('/users', data);
+        await api.post('/users', data);
 
-      Alert.alert(
-        'Cadastro realizado com sucesso!',
-        'Você já pode fazer login na aplicação',
-      );
+        Alert.alert(
+          'Cadastro realizado com sucesso!',
+          'Você já pode fazer login na aplicação',
+        );
 
-      navigation.goBack();
-    } catch (err) {
-      if (err instanceof Yup.ValidationError) {
-        const errors = getValidationError(err);
+        navigation.goBack();
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationError(err);
 
-        formRef.current?.setErrors(errors);
+          formRef.current?.setErrors(errors);
 
-        return;
+          return;
+        }
+
+        Alert.alert('Erro no cadastro', 'Occoreu um erro ao fazer o cadastro');
       }
-
-      Alert.alert('Erro no cadastro', 'Occoreu um erro ao fazer o cadastro');
-    }
-  }, []);
+    },
+    [navigation],
+  );
 
   return (
     <>
@@ -129,14 +132,14 @@ const SingUp: React.FC = () => {
               />
 
               <Button onPress={() => formRef.current?.submitForm()}>
-                Entrar
+                Confirmar
               </Button>
             </Form>
           </Container>
         </ScrollView>
         <BackToSignIn onPress={() => navigation.goBack()}>
           <Icon name="arrow-left" size={20} color="#fff" />
-          <BackToSignInText>Voltar para logon</BackToSignInText>
+          <BackToSignInText>Voltar para login</BackToSignInText>
         </BackToSignIn>
       </KeyboardAvoidingView>
     </>
